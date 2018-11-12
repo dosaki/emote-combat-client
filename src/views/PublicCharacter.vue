@@ -57,8 +57,8 @@ export default {
         self.$data.characterSheets = globalState.characterSheets
         self.$data.sheetEntries = globalState.characterSheets[characterId]
       })
-    console.log(this.$data)
-    console.log(self.$data.characterSheets)
+    // console.log(this.$data)
+    // console.log(self.$data.characterSheets)
   }
 }
 </script>

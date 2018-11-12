@@ -3,7 +3,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import TokenService from '@/common/token.service'
 
-const API_URL = 'http://emote-combat.dosaki.net:3000'
+const API_URL = 'https://emote-combat-server.dosaki.net'
 
 const ApiService = {
   init () {

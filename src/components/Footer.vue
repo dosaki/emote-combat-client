@@ -1,7 +1,12 @@
 <template>
   <footer>
     <div class="content">
-      by Dosaki
+      <div class="left">
+        by <a href="https://github.com/dosaki/">Dosaki</a>
+      </div>
+      <div class="right">
+        <a href="https://github.com/dosaki/emote-combat-client/issues">Report a problem</a>
+      </div>
     </div>
   </footer>
 </template>
@@ -17,5 +22,14 @@ export default {
   width: 1024px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 10px;
+}
+.left,
+.right {
+  width:509px;
+  display:inline-block;
+}
+.right{
+  text-align: right;
 }
 </style>

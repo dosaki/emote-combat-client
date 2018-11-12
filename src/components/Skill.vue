@@ -1,7 +1,11 @@
 <template>
   <div v-if="skill" :class="skill.name.toLowerCase()">
-    <div v-if="['Experience', 'Health'].includes(skill.name)" class="meter skill">
-      <span class="bar" :style="`width: ${valuePercentage(skill.name, skillEntry.value)}%`">{{skill.name}} {{skillEntry.value}}</span>
+    <div v-if="['Experience', 'Health'].includes(skill.name)" class="skill metered-skill">
+      <div class="meter">
+        <span class="bar" :style="`width: ${valuePercentage(skill.name, skillEntry.value)}%`">{{skill.name}} {{skillEntry.value}}</span>
+      </div>
+      <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('add-main-skill', {skill, skillEntry, max:5})">+</button></span>
+      <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('subtract-main-skill', {skill, skillEntry})">-</button></span>
     </div>
     <div v-else class="skill">
       <span class="item name">{{skill.name}}</span>
@@ -32,7 +36,7 @@ export default {
   },
   methods: {
     valuePercentage (skillName, value) {
-      return ((skillName === 'Health' ? value / 5 : Math.min(94, value) / 94) * 100) - 4
+      return Math.max(((skillName === 'Health' ? value / 5 : Math.min(94, value) / 94) * 100) - 4, 0)
     }
   }
 }
@@ -45,7 +49,10 @@ export default {
   height:24px;
 }
 .skill {
-  margin-top:5px;
+  margin-top: 5px;
+}
+.metered-skill {
+  margin-bottom: 15px;
 }
 .subskill-group {
   display:inline-block;
@@ -134,7 +141,8 @@ export default {
   background: linear-gradient(to left, transparent,rgba(67, 81, 100, 0.9), transparent);
 }
 .meter {
-  height: 20px;  /* Can be anything */
+  height: 20px;
+  width: 450px;
   position: relative;
   background: #555;
   -moz-border-radius: 25px;
@@ -142,6 +150,7 @@ export default {
   border-radius: 25px;
   padding: 6px;
   box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+  display: inline-block;
 }
 .meter > .bar {
   display: block;

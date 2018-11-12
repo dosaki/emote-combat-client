@@ -3,11 +3,16 @@
     <div class="sheet">
       <div class="general-skills">
         <ec-Skill class="general-skill"
-          v-for="(skill, index) in skills.general"
-          :key="'general'+index"
-          :skillEntry="sheetEntries.find(entry => entry['skill_id'] === skill.id)"
-          :skill="skill"
+          :skillEntry="experience()"
+          :skill="getStoreSkill('name', 'Experience')"
           :interactable="false">
+        </ec-Skill>
+        <ec-Skill class="general-skill"
+          :skillEntry="health()"
+          :skill="getStoreSkill('name', 'Health')"
+          :interactable="true"
+          v-on:add-main-skill="addMainSkill"
+          v-on:subtract-main-skill="subtractMainSkill">
         </ec-Skill>
       </div>
       <div class="other-skills">
@@ -49,6 +54,14 @@ export default {
     ecSkill
   },
   methods: {
+    experience () {
+      const skill = this.getStoreSkill('name', 'Experience')
+      return this.sheetEntries.find(entry => entry['skill_id'] === skill.id)
+    },
+    health () {
+      const skill = this.getStoreSkill('name', 'Health')
+      return this.sheetEntries.find(entry => entry['skill_id'] === skill.id)
+    },
     saveSheet () {
       this.$store.dispatch('saveModifiedSheetSkills', {
         sheetEntries: this.$store.state.global.characterSheets[this.characterId],
@@ -101,7 +114,8 @@ export default {
       const skillEntry = this.getStoreSheetEntry('id', info.skillEntry.id)
       const experience = this.getStoreSkill('name', 'Experience')
       const experienceEntry = this.getStoreSheetEntry('skill_id', experience.id)
-      if (experienceEntry.value + info.skill.cost >= 0 && (skillEntry.value - 1) >= info.skill['starting_value']) {
+      const minValue = info.skill.name === 'Health' ? 0 : info.skill['starting_value']
+      if (experienceEntry.value + info.skill.cost >= 0 && (skillEntry.value - 1) >= minValue) {
         this.$store.dispatch('modifySheetSkill', {
           characterId: this.characterId,
           entryId: skillEntry.id,
