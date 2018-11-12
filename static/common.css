@@ -1,0 +1,97 @@
+@font-face {
+  font-family: 'lifecraftregular';
+  src: url('/static/lifecraft.woff2') format('woff2'),
+      url('/static/lifecraft.woff') format('woff'),
+      url('/static/lifecraft.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.clear-body{
+  font-family: "Open Sans", "sans-serif";
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: white;
+  /* text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+}
+
+a {
+  color: #e6cc00;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fffce5;
+  text-shadow: -1px 0 rgb(53, 53, 53), 0 1px rgb(53, 53, 53), 1px 0 rgb(53, 53, 53), 0 -1px rgb(53, 53, 53);
+}
+
+.title {
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.btn {
+  color: #e6cc00;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-decoration: none;
+  font-weight: 1000;
+  background: #ff000081;
+  box-shadow:
+    0 1px 2px #fff,
+    0 -1px 1px #fff,
+    inset 0 -1px 1px rgba(0,0,0,0.5),
+    inset 0 1px 1px rgba(255,255,255,0.8);
+  border-radius: 5px;
+  padding:5px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #ff4242ad;
+  box-shadow:
+    0 1px 2px #999,
+    0 -1px 1px #444,
+    inset 0 -1px 1px rgba(0,0,0,0.5),
+    inset 0 1px 1px rgba(255,255,255,0.8);
+}
+
+.btn:disabled {
+  background: #9c9c9c81;
+  color: #aaa;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  color: #555;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  outline: none;
+  border-radius: 4px;
+}
+.btn-borderless {
+  color: #e6cc00;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  border: 0;
+  background: transparent;
+  font-size: 21px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.btn-borderless:hover {
+  color: white;
+  text-shadow: -1px 0 rgb(53, 53, 53), 0 1px rgb(53, 53, 53), 1px 0 rgb(53, 53, 53), 0 -1px rgb(53, 53, 53);
+}
+.btn-borderless:disabled {
+  color: rgb(136, 136, 136);
+}
+
+.error {
+  color: #ff3333;
+  font-weight: bold;
+  font-size: 14px;
+  padding-bottom: 10px;
+  text-align: center;
+}
