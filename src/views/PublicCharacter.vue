@@ -8,7 +8,7 @@
       <span class="title">{{character.name}}</span>
     </div>
     <ec-pubSheet class="character-sheet"
-      :sheetEntries="sheetEntries">
+      :characterId="character.id">
     </ec-pubSheet>
   </div>
 </template>
@@ -22,36 +22,30 @@ export default {
   },
   data () {
     return {
-      character: (this.$store.state.global.allCharacters || []).find(character => {
-        return character.id === this.$route.params.characterId
-      }),
-      sheetEntries: this.$store.state.global.characterSheets && this.$store.state.global.characterSheets[this.$route.params.characterId]
+      character: null
     }
   },
-  mounted () {
+  beforeMount () {
     const self = this
     const store = this.$store
     const globalState = store.state.global
     const characterId = this.$route.params.characterId
 
-    if (!globalState.allCharacters) {
-      store.dispatch('fetchAllCharacters')
-    }
-    if (!globalState.skills) {
-      store.dispatch('fetchSkills')
+    if (globalState.allCharacters && globalState.allCharacters.length > 0) {
+      self.$data.character = globalState.allCharacters.find(character => {
+        return character.id === characterId
+      })
     }
 
-    if (!globalState.characterSheets || !globalState.characterSheets[characterId]) {
-      store.dispatch('fetchCharacterSheet', { characterId })
+    if (globalState.characterSheets && Object.keys(globalState.characterSheets).length > 0) {
+      self.$data.characterSheets = globalState.characterSheets
     }
 
     store.watch(
       state => state.global.allCharacters,
       value => {
-        globalState.allCharacters.forEach((character) => {
-          store.dispatch('fetchCharacterSheet', {
-            characterId: character.id
-          })
+        self.$data.character = globalState.allCharacters.find(character => {
+          return character.id === characterId
         })
       })
 
@@ -59,7 +53,6 @@ export default {
       state => state.global.characterSheets,
       value => {
         self.$data.characterSheets = globalState.characterSheets
-        self.$data.sheetEntries = globalState.characterSheets[characterId]
       })
   }
 }

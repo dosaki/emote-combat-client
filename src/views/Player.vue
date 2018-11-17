@@ -1,18 +1,18 @@
 <template>
-  <div v-if="player()" :id="player().id">
+  <div v-if="player" :id="player.id">
     <div class="title">
-      {{player().name}}'s characters
+      {{player.name}}'s characters
     </div>
     <div class="character-list">
       <div class="character-list-item"
-          v-for="(character, index) in characters()"
+          v-for="(character, index) in characters"
           v-bind:key="index+'-'+character.id">
         <router-link class="character-info character-link"
           :to="{
             name: 'character',
             params: {
               characterId: character.id,
-              playerId: player().id
+              playerId: player.id
             }
           }">
           {{character.name}}
@@ -31,24 +31,43 @@ import TokenService from '@/common/token.service'
 
 export default {
   name: 'player',
+  data () {
+    return {
+      player: null,
+      characters: null
+    }
+  },
   mounted () {
     const router = this.$router
+    const data = this.$data
     const store = this.$store
+    const globalState = this.$store.state.global
 
-    if (TokenService.hasToken()) {
-      store.dispatch('fetchSkills')
-      store.dispatch('fetchPlayer', TokenService.getCurrentUser())
-      router.push({
-        name: 'player',
-        params: {
-          playerId: TokenService.getCurrentUser()
-        }
-      })
-    } else {
+    if (!TokenService.hasToken()) {
       router.push({
         name: 'home'
       })
     }
+
+    if (globalState.player) {
+      data.player = globalState.player
+    }
+
+    if (globalState.characters) {
+      data.characters = globalState.characters
+    }
+
+    store.watch(
+      state => state.global.player,
+      value => {
+        data.player = value
+      })
+
+    store.watch(
+      state => state.global.characters,
+      value => {
+        data.characters = value
+      })
   },
   methods: {
     newCharacter () {
@@ -56,20 +75,14 @@ export default {
       document.getElementById('newCharacter').value = ''
       this.$store.dispatch('createCharacter', {
         characterName,
-        playerId: this.$store.state.global.player.id
+        playerId: this.player.id
       })
     },
     deleteCharacter (characterId) {
       this.$store.dispatch('deleteCharacter', {
         characterId,
-        playerId: this.$store.state.global.player.id
+        playerId: this.player.id
       })
-    },
-    player () {
-      return this.$store.state.global.player
-    },
-    characters () {
-      return this.$store.state.global.characters
     }
   }
 }

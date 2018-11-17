@@ -1,15 +1,16 @@
 import { PlayerService, CharacterService, SheetEntryService, SkillService } from '@/common/api.service'
 
 const state = {
-  player: null,
-  characters: null,
-  allCharacters: null,
-  characterSheets: null,
+  player: {},
+  characters: [],
+  allCharacters: [],
+  characterSheets: {},
   skills: []
 }
 
 const actions = {
   fetchPlayer ({ commit }, uuid) {
+    // console.log('Dispatching fetchPlayer')
     return PlayerService.get(uuid)
       .then(({ data }) => {
         commit('setPlayer', data)
@@ -19,6 +20,7 @@ const actions = {
       })
   },
   fetchCharacters ({ commit }, playerId) {
+    // console.log('Dispatching fetchCharacters')
     return CharacterService.getAll(playerId)
       .then(({ data }) => {
         commit('setCharacters', data)
@@ -28,6 +30,7 @@ const actions = {
       })
   },
   fetchAllCharacters ({ commit }) {
+    // console.log('Dispatching fetchAllCharacters')
     return CharacterService.getAll()
       .then(({ data }) => {
         commit('setAllCharacters', data)
@@ -37,6 +40,7 @@ const actions = {
       })
   },
   fetchCharacterSheet ({ commit }, params) {
+    // console.log('Dispatching fetchCharacterSheet');
     (params.playerId ? SheetEntryService.getAll(params.playerId, params.characterId) : SheetEntryService.getAllAnonymous(params.characterId))
       .then(({ data }) => {
         commit('setCharacterSheet', {
@@ -49,6 +53,7 @@ const actions = {
       })
   },
   fetchSkills ({ commit }, playerId) {
+    // console.log('Dispatching fetchSkills')
     return SkillService.getAll()
       .then(({ data }) => {
         const topLevelSkills = data.filter(skill => skill['parent_skill_id'] === '00000000-0000-0000-0000-000000000000')
@@ -67,6 +72,7 @@ const actions = {
   },
 
   createCharacter ({ commit }, params) {
+    // console.log('Dispatching createCharacter')
     CharacterService.create(params.playerId, {name: params.characterName})
       .then(({ data }) => {
         const charData = data
@@ -88,6 +94,7 @@ const actions = {
   },
 
   deleteCharacter ({ commit }, params) {
+    // console.log('Dispatching deleteCharacter')
     CharacterService.destroy(params.playerId, params.characterId)
       .then(({ data }) => {
         commit('deleteCharacter', params.characterId)
@@ -99,9 +106,11 @@ const actions = {
   },
 
   modifySheetSkill ({ commit }, params) {
+    // console.log('Dispatching modifySheetSkill')
     commit('modifySheetSkill', params)
   },
   saveModifiedSheetSkills ({ commit }, params) {
+    // console.log('Dispatching saveModifiedSheetSkills')
     SheetEntryService.updateMany(params.playerId, params.characterId, params.sheetEntries)
       .then(({ data }) => {
         commit('saveModifiedSheetSkills', {

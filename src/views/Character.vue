@@ -31,45 +31,33 @@ export default {
   },
   data () {
     return {
-      character: (this.$store.state.global.characters || []).find(character => {
-        return character.id === this.$route.params.characterId
-      })
+      character: null
     }
+  },
+  beforeMount () {
+    const store = this.$store
+    store.watch(
+      state => state.global.characters,
+      value => {
+        this.$data.character = store.state.global.characters.find(character => {
+          return character.id === this.$route.params.characterId
+        })
+      })
   },
   mounted () {
     const router = this.$router
     const store = this.$store
-    if (TokenService.hasToken()) {
-      if (store.global && !store.global.player.id) {
-        store.dispatch('fetchSkills')
-        store.dispatch('fetchPlayer', TokenService.getCurrentUser())
-      }
-      if (store.global && !store.global.characters) {
-        store.dispatch('fetchCharacters', store.global.player.id)
-      }
-
-      if (store.state.global.characters) {
-        store.state.global.characters.forEach((character) => {
-          store.dispatch('fetchCharacterSheet', {
-            characterId: character.id
-          })
-        })
-      }
-
-      store.watch(
-        state => state.global.characters,
-        value => {
-          store.state.global.characters.forEach((character) => {
-            store.dispatch('fetchCharacterSheet', {
-              playerId: store.state.global.player.id,
-              characterId: character.id
-            })
-          })
-        })
-    } else {
+    const characterId = this.$route.params.characterId
+    if (!TokenService.hasToken()) {
       router.push({
         name: 'home'
       })
+    } else {
+      if (store.state.global.characters && (!this.$data.character || !this.$data.character.id !== characterId)) {
+        this.$data.character = store.state.global.characters.find(character => {
+          return character.id === characterId
+        })
+      }
     }
   }
 }

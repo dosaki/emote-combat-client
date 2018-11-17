@@ -22,33 +22,41 @@ export default {
       return TokenService.hasToken()
     }
   },
-  mounted () {
+  beforeMount () {
     const store = this.$store
-
     store.dispatch('fetchAllCharacters')
     store.dispatch('fetchSkills')
+
+    console.log('Token:', TokenService.hasToken())
+    if (TokenService.hasToken()) {
+      store.dispatch('fetchPlayer', TokenService.getCurrentUser())
+      store.dispatch('fetchCharacters', TokenService.getCurrentUser())
+    }
 
     store.watch(
       state => state.global.player,
       value => {
         store.dispatch('fetchCharacters', value.id)
+        console.log('(Global Watch) player:', value)
       })
 
     store.watch(
       state => state.global.characters,
       value => {
-        (store.state.global.characters || []).forEach((character) => {
+        store.state.global.characters.forEach((character) => {
           store.dispatch('fetchCharacterSheet', {
             playerId: store.state.global.player.id,
             characterId: character.id
           })
         })
+        console.log('(Global Watch) characters:', value)
       })
 
     store.watch(
       state => state.global.allCharacters,
       value => {
-        (store.state.global.allCharacters || []).forEach((character) => {
+        console.log('(Global Watch) all characters:', value)
+        store.state.global.allCharacters.forEach((character) => {
           store.dispatch('fetchCharacterSheet', {
             characterId: character.id
           })

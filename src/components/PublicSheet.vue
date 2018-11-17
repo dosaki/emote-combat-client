@@ -1,6 +1,6 @@
 <template>
-  <div v-if="sheetEntries" class="parchment">
-    <div class="sheet">
+  <div class="parchment">
+    <div v-if="sheetEntries && skills" class="sheet">
       <div class="general-skills">
         <ec-Skill class="general-skill"
           v-for="(skill, index) in skills.general"
@@ -30,12 +30,37 @@ import ecSkill from '@/components/Skill'
 export default {
   name: 'ec-pubSheet',
   props: {
-    sheetEntries: { type: Array, required: false }
+    characterId: { type: String, required: false }
   },
   data () {
     return {
-      skills: this.$store.state.global.skills
+      skills: null,
+      sheetEntries: this.$store.state.global.characterSheets[this.$route.params.characterId]
     }
+  },
+  beforeMount () {
+    const store = this.$store
+    const data = this.$data
+    const globalState = store.state.global
+    const characterId = this.characterId
+
+    console.log('Sheets:', globalState.characterSheets)
+    if (globalState.skills && Object.keys(globalState.skills).length > 0) {
+      data.skills = globalState.skills
+    }
+    if (globalState.characterSheets && globalState.characterSheets[characterId] && globalState.characterSheets[characterId].length > 0) {
+      data.sheetEntries = globalState.characterSheets[characterId]
+    }
+    store.watch(
+      state => state.global.skills,
+      value => {
+        data.skills = globalState.skills
+      })
+    store.watch(
+      state => state.global.characterSheets,
+      value => {
+        data.sheetEntries = globalState.characterSheets[characterId]
+      })
   },
   components: {
     ecSkill
