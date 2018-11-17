@@ -1,21 +1,21 @@
 <template>
-  <div v-if="character()" class="character" :id="character().id">
+  <div v-if="character" class="character" :id="character.id">
     <div class="header">
       <router-link class="btn"
         :to="{
           name: 'player',
-          params: {playerId: character()['player_id']}
+          params: {playerId: character['player_id']}
         }">&lt;</router-link>
-      <span class="title">{{character().name}}</span>
+      <span class="title">{{character.name}}</span>
       <router-link
         :to="{
           name: 'publicCharacter',
-          params: {characterId: character().id}
+          params: {characterId: character.id}
         }">(public link)</router-link>
     </div>
     <ec-Sheet class="character-sheet"
-      :characterId="character().id"
-      :playerId="character()['player_id']">
+      :characterId="character.id"
+      :playerId="character['player_id']">
     </ec-Sheet>
   </div>
 </template>
@@ -29,9 +29,9 @@ export default {
   components: {
     ecSheet
   },
-  methods: {
-    character () {
-      return (this.$store.state.global.characters || []).find(character => {
+  data () {
+    return {
+      character: (this.$store.state.global.characters || []).find(character => {
         return character.id === this.$route.params.characterId
       })
     }
@@ -46,6 +46,14 @@ export default {
       }
       if (store.global && !store.global.characters) {
         store.dispatch('fetchCharacters', store.global.player.id)
+      }
+
+      if (store.state.global.characters) {
+        store.state.global.characters.forEach((character) => {
+          store.dispatch('fetchCharacterSheet', {
+            characterId: character.id
+          })
+        })
       }
 
       store.watch(

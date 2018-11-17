@@ -30,7 +30,7 @@ import ecSkill from '@/components/Skill'
 export default {
   name: 'ec-pubSheet',
   props: {
-    sheetEntries: { type: Array, required: true }
+    sheetEntries: { type: Array, required: false }
   },
   data () {
     return {
@@ -39,17 +39,6 @@ export default {
   },
   components: {
     ecSkill
-  },
-  methods: {
-    getStoreSkill (property, finder) {
-      return this.$store.state.global.skills.general.find(skill => skill[property] === finder) ||
-        this.$store.state.global.skills.main.find(skill => skill[property] === finder)
-    },
-    getStoreSheetEntry (property, finder) {
-      return this.sheetEntries.find(skill => skill[property] === finder)
-    }
-  },
-  mounted () {
   }
 }
 </script>

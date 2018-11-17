@@ -1,6 +1,10 @@
 <template>
   <div v-if="character" class="character" :id="character.id">
     <div class="header">
+      <router-link class="btn"
+        :to="{
+          name: 'allCharacters'
+        }">&lt;</router-link>
       <span class="title">{{character.name}}</span>
     </div>
     <ec-pubSheet class="character-sheet"
@@ -57,8 +61,6 @@ export default {
         self.$data.characterSheets = globalState.characterSheets
         self.$data.sheetEntries = globalState.characterSheets[characterId]
       })
-    // console.log(this.$data)
-    // console.log(self.$data.characterSheets)
   }
 }
 </script>

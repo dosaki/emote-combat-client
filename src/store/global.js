@@ -3,7 +3,7 @@ import { PlayerService, CharacterService, SheetEntryService, SkillService } from
 const state = {
   player: null,
   characters: null,
-  // allCharacters: null,
+  allCharacters: null,
   characterSheets: null,
   skills: []
 }
@@ -161,7 +161,15 @@ const mutations = {
   }
 }
 
+// Example in case I want to turn things into getters
+// const getters = {
+//   allCharacters: state => {
+//     return state.allCharacters
+//   }
+// }
+
 export default {
+  // getters, // Example getters
   state,
   actions,
   mutations

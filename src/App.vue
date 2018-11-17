@@ -1,7 +1,7 @@
 <template>
-  <div id='app'>
+  <div id='app' class="container">
     <ec-header class="header"></ec-header>
-    <router-view class="content" :key="$route.fullPath"></router-view>
+    <router-view class="body" :key="$route.fullPath"></router-view>
     <ec-footer class="footer"></ec-footer>
   </div>
 </template>
@@ -59,13 +59,17 @@ export default {
 </script>
 
 <style scoped>
-.content {
+.container {
+  min-height:100%;
+  position:relative;
+}
+.body {
   width: 1024px;
   margin-left: auto;
   margin-right: auto;
   background: #1d1d1d;
   border: 10px solid #242424;
-  padding: 20px;
+  padding: 20px 20px 80px;
 }
 .header {
   border-bottom:1px solid black;
@@ -76,5 +80,9 @@ export default {
   border-top:1px solid black;
   padding-top:5px;
   margin-top:10px;
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height: 60px;
 }
 </style>
