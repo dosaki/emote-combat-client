@@ -27,6 +27,7 @@
 
 <script>
 import ecSkill from '@/components/Skill'
+
 export default {
   name: 'ec-pubSheet',
   props: {
@@ -35,7 +36,7 @@ export default {
   data () {
     return {
       skills: null,
-      sheetEntries: this.$store.state.global.characterSheets[this.$route.params.characterId]
+      sheetEntries: null
     }
   },
   beforeMount () {
@@ -48,6 +49,7 @@ export default {
     if (globalState.skills && Object.keys(globalState.skills).length > 0) {
       data.skills = globalState.skills
     }
+
     if (globalState.characterSheets && globalState.characterSheets[characterId] && globalState.characterSheets[characterId].length > 0) {
       data.sheetEntries = globalState.characterSheets[characterId]
     }

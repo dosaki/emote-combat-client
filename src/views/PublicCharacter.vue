@@ -6,6 +6,15 @@
           name: 'allCharacters'
         }">&lt;</router-link>
       <span class="title">{{character.name}}</span>
+      <router-link
+        v-if="currentPlayer === character['player_id']"
+        :to="{
+          name: 'character',
+          params: {
+            playerId: character['player_id'],
+            characterId: character.id
+          }
+        }">(edit)</router-link>
     </div>
     <ec-pubSheet class="character-sheet"
       :characterId="character.id">
@@ -15,6 +24,8 @@
 
 <script>
 import ecPubSheet from '@/components/PublicSheet'
+import TokenService from '@/common/token.service'
+
 export default {
   name: 'pubCharacter',
   components: {
@@ -22,7 +33,8 @@ export default {
   },
   data () {
     return {
-      character: null
+      character: null,
+      currentPlayer: null
     }
   },
   beforeMount () {
@@ -30,6 +42,8 @@ export default {
     const store = this.$store
     const globalState = store.state.global
     const characterId = this.$route.params.characterId
+
+    self.$data.currentPlayer = TokenService.getCurrentUser()
 
     if (globalState.allCharacters && globalState.allCharacters.length > 0) {
       self.$data.character = globalState.allCharacters.find(character => {
