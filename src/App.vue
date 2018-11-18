@@ -27,7 +27,6 @@ export default {
     store.dispatch('fetchAllCharacters')
     store.dispatch('fetchSkills')
 
-    console.log('Token:', TokenService.hasToken())
     if (TokenService.hasToken()) {
       store.dispatch('fetchPlayer', TokenService.getCurrentUser())
       store.dispatch('fetchCharacters', TokenService.getCurrentUser())
@@ -37,7 +36,6 @@ export default {
       state => state.global.player,
       value => {
         store.dispatch('fetchCharacters', value.id)
-        console.log('(Global Watch) player:', value)
       })
 
     store.watch(
@@ -49,13 +47,11 @@ export default {
             characterId: character.id
           })
         })
-        console.log('(Global Watch) characters:', value)
       })
 
     store.watch(
       state => state.global.allCharacters,
       value => {
-        console.log('(Global Watch) all characters:', value)
         store.state.global.allCharacters.forEach((character) => {
           store.dispatch('fetchCharacterSheet', {
             characterId: character.id

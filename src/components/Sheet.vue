@@ -23,12 +23,13 @@
           :subskillEntries="sheetEntries.filter(entry => skill.children.map(subskill => subskill.id).includes(entry['skill_id']))"
           :skill="skill"
           :interactable="true"
+          :characterRace="'Night Elf'"
           v-on:add-main-skill="addMainSkill"
           v-on:subtract-main-skill="subtractMainSkill"
           v-on:add-main-subskill="addMainSubskill"
           v-on:subtract-main-subskill="subtractMainSubskill">
         </ec-Skill>
-        <div class="img-filler"><img src="/static/magic.png"/></div>
+        <div class="img-filler"><img src="/static/images/magic.png"/></div>
         <div><button class="btn save-btn" :disabled="isDisabled" v-on:click="saveSheet">Save</button></div>
       </div>
     </div>
@@ -161,7 +162,7 @@ export default {
 <style scoped>
 .parchment {
   width: 550px;
-  background: url('/static/parchment.png');
+  background: url('/static/images/parchment.png');
   border-radius: 10px;
 }
 .sheet {

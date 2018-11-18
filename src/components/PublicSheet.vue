@@ -17,9 +17,10 @@
           :skillEntry="sheetEntries.find(entry => entry['skill_id'] === skill.id)"
           :subskillEntries="sheetEntries.filter(entry => skill.children.map(subskill => subskill.id).includes(entry['skill_id']))"
           :skill="skill"
-          :interactable="false">
+          :interactable="false"
+          :characterRace="'Night Elf'">
         </ec-Skill>
-        <div class="img-filler"><img src="/static/magic.png"/></div>
+        <div class="img-filler"><img src="/static/images/magic.png"/></div>
       </div>
     </div>
   </div>
@@ -73,7 +74,7 @@ export default {
 <style scoped>
 .parchment {
   width: 550px;
-  background: url('/static/parchment.png');
+  background: url('/static/images/parchment.png');
   border-radius: 10px;
 }
 .sheet {

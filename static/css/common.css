@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'lifecraftregular';
-  src: url('/static/lifecraft.woff2') format('woff2'),
-      url('/static/lifecraft.woff') format('woff'),
-      url('/static/lifecraft.ttf') format('truetype');
+  src: url('/static/fonts/lifecraft.woff2') format('woff2'),
+      url('/static/fonts/lifecraft.woff') format('woff'),
+      url('/static/fonts/lifecraft.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -35,6 +35,10 @@ a:hover {
   color: white;
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.small {
+  font-size: 0.8em;
 }
 
 .btn {

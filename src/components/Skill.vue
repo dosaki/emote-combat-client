@@ -1,22 +1,22 @@
 <template>
   <div v-if="skill" :class="skill.name.toLowerCase()">
     <div v-if="['Experience', 'Health'].includes(skill.name)" class="skill metered-skill">
-      <div class="meter">
+      <div class="meter" :title="skill.description">
         <span class="bar" :style="`width: ${valuePercentage(skill.name, skillEntry.value)}%`">{{skill.name}} {{skillEntry.value}}</span>
       </div>
       <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('add-main-skill', {skill, skillEntry, max:5})">+</button></span>
       <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('subtract-main-skill', {skill, skillEntry})">-</button></span>
     </div>
     <div v-else class="skill">
-      <span class="item name">{{skill.name}}</span>
+      <span class="item name" :title="skill.description">{{skill.name}}</span>
       <span class="item value">{{skillEntry.value}}</span>
       <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('add-main-skill', {skill, skillEntry, max:6})">+</button></span>
       <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('subtract-main-skill', {skill, skillEntry})">-</button></span>
     </div>
     <div class="subskill-group" v-if="skill.children &&  skill.children.length > 0">
-      <div class="subskill" v-for="(subskill, index) in skill.children"
+      <div class="subskill" v-for="(subskill, index) in sortedSkills(skill.children)"
           :key="'subskill'+subskill.id+'-'+index">
-        <span class="item name">{{subskill.name}}</span>
+        <span class="item name" :title="racializeSkill(characterRace, subskill)">{{subskill.name}}</span>
         <span class="item value">{{subskillEntries.find(s=>s['skill_id'] === subskill.id).value}}</span>
         <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('add-main-subskill', {subskill, subskillEntries, max:skillEntry.value/2})">+</button></span>
         <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('subtract-main-subskill', {subskill, subskillEntries})">-</button></span>
@@ -26,17 +26,37 @@
 </template>
 
 <script>
+import { Racialize } from '@/common/skill.racializer'
+
 export default {
   name: 'ec-Skill',
   props: {
     skill: {type: Object, required: false},
     skillEntry: {type: Object, required: false},
     subskillEntries: {type: Array, required: false},
-    interactable: {type: Boolean, required: true}
+    interactable: {type: Boolean, required: true},
+    characterRace: {type: String, required: false}
   },
   methods: {
+    sortedSkills (skills) {
+      return [...skills].sort((a, b) => {
+        if (a.name > b.name) {
+          return 1
+        }
+        if (a.name < b.name) {
+          return -1
+        }
+        return 0
+      })
+    },
     valuePercentage (skillName, value) {
       return Math.max(((skillName === 'Health' ? value / 5 : Math.min(94, value) / 94) * 100) - 4, 0)
+    },
+    racializeSkill (race, skill) {
+      if (Racialize[skill.name.toLowerCase()]) {
+        return Racialize[skill.name.toLowerCase()](race, skill.description)
+      }
+      return skill.description
     }
   }
 }

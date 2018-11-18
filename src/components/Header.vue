@@ -79,11 +79,11 @@ export default {
 }
 .brand .top-out {
   width: 200px;
-  background: url('/static/map-top.png');
+  background: url('/static/images/map-top.png');
 }
 .brand .bottom-out {
   width: 250px;
-  background: url('/static/map-bottom.png');
+  background: url('/static/images/map-bottom.png');
 }
 .brand .top,
 .brand .bottom {
