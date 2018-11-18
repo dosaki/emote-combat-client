@@ -45,7 +45,6 @@ export default {
     const globalState = store.state.global
     const characterId = this.characterId
 
-    console.log('Sheets:', globalState.characterSheets)
     if (globalState.skills && Object.keys(globalState.skills).length > 0) {
       data.skills = globalState.skills
     }

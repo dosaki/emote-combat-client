@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { PlayerService, CharacterService, SheetEntryService, SkillService } from '@/common/api.service'
 
 const state = {
@@ -130,7 +131,7 @@ const mutations = {
       state.player = {}
     }
     Object.keys(player).forEach((prop) => {
-      state.player[prop] = player[prop]
+      Vue.set(state.player, prop, player[prop])
     })
   },
   setCharacters (state, characters) {
@@ -143,7 +144,7 @@ const mutations = {
     if (!state.characterSheets) {
       state.characterSheets = {}
     }
-    state.characterSheets[params.characterId] = params.sheet
+    Vue.set(state.characterSheets, params.characterId, params.sheet)
   },
   setSkills (state, skills) {
     state.skills = skills
