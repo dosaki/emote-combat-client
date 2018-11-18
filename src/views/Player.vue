@@ -7,6 +7,7 @@
       <div class="character-list-item"
           v-for="(character, index) in characters"
           v-bind:key="index+'-'+character.id">
+        <img class="race-portrait" :src="getRaceIcon(character)" />
         <router-link class="character-info character-link"
           :to="{
             name: 'character',
@@ -20,7 +21,36 @@
         <span class="character-info character-delete"><button class="btn-borderless" v-on:click="deleteCharacter(character.id)">-</button></span>
       </div>
       <div class="character-list-item ">
-        <input class="new-character-input" id="newCharacter" type="text" placeholder="New Character Name"/><button v-on:click="newCharacter" class="btn-borderless create-character">+</button>
+        <select id="genderSelect">
+          <option value="">Gender</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+        </select>
+        <select id="raceSelect">
+          <option value="">Race</option>
+          <option value="Dark Iron Dwarf">Dark Iron Dwarf</option>
+          <option value="Draenei">Draenei</option>
+          <option value="Dwarf">Dwarf</option>
+          <option value="Gnome">Gnome</option>
+          <option value="Human">Human</option>
+          <option value="Kul Tiran">Kul Tiran</option>
+          <option value="Lightforged Draenei">Lightforged Draenei</option>
+          <option value="Night Elf">Night Elf</option>
+          <option value="Void Elf">Void Elf</option>
+          <option value="Worgen">Worgen</option>
+          <option value="Pandaren">Pandaren</option>
+          <option value="Blood Elf">Blood Elf</option>
+          <option value="Goblin">Goblin</option>
+          <option value="Highmountain Tauren">Highmountain Tauren</option>
+          <option value="Mag'har Orc">Mag'har Orc</option>
+          <option value="Nightborne">Nightborne</option>
+          <option value="Orc">Orc</option>
+          <option value="Tauren">Tauren</option>
+          <option value="Troll">Troll</option>
+          <option value="Forsaken">Forsaken</option>
+        </select>
+        <input class="new-character-input" id="newCharacter" type="text" placeholder="New Character Name"/>
+        <button v-on:click="newCharacter" class="btn create-character">+</button>
       </div>
     </div>
   </div>
@@ -72,9 +102,13 @@ export default {
   methods: {
     newCharacter () {
       const characterName = document.getElementById('newCharacter').value
+      const characterGender = document.getElementById('genderSelect').value
+      const characterRace = document.getElementById('raceSelect').value
       document.getElementById('newCharacter').value = ''
       this.$store.dispatch('createCharacter', {
         characterName,
+        characterGender,
+        characterRace,
         playerId: this.player.id
       })
     },
@@ -83,6 +117,9 @@ export default {
         characterId,
         playerId: this.player.id
       })
+    },
+    getRaceIcon (character) {
+      return `/static/images/races/${character.race.replace(/[\s']/g, '').toLowerCase()}_${character.gender.toLowerCase()}.jpg`
     }
   }
 }
@@ -105,10 +142,17 @@ export default {
   display:inline-block;
 }
 .character-link {
-  min-width: 250px;
+  min-width: 215px;
+  margin-bottom: 10px;
+}
+.race-portrait {
+  margin-bottom: -10px;
 }
 .new-character-input {
   min-width: 230px;
   margin-right: 6px;
+}
+.create-character {
+  padding: 3px 6px;
 }
 </style>

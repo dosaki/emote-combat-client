@@ -18,7 +18,8 @@
           :subskillEntries="sheetEntries.filter(entry => skill.children.map(subskill => subskill.id).includes(entry['skill_id']))"
           :skill="skill"
           :interactable="false"
-          :characterRace="'Night Elf'">
+          :characterRace="character.race"
+          :gender="character.gender">
         </ec-Skill>
         <div class="img-filler"><img src="/static/images/magic.png"/></div>
       </div>
@@ -32,7 +33,7 @@ import ecSkill from '@/components/Skill'
 export default {
   name: 'ec-pubSheet',
   props: {
-    characterId: { type: String, required: false }
+    character: { type: Object, required: false }
   },
   data () {
     return {
@@ -44,7 +45,7 @@ export default {
     const store = this.$store
     const data = this.$data
     const globalState = store.state.global
-    const characterId = this.characterId
+    const characterId = (this.character || {}).id
 
     if (globalState.skills && Object.keys(globalState.skills).length > 0) {
       data.skills = globalState.skills

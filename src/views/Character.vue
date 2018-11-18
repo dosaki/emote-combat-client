@@ -6,7 +6,7 @@
           name: 'player',
           params: {playerId: character['player_id']}
         }">&lt;</router-link>
-      <span class="title">{{character.name}}</span>
+      <span class="title"><img class="race-portrait" :src="getRaceIcon(character)" /> {{character.name}}</span>
       <router-link
         :to="{
           name: 'publicCharacter',
@@ -14,7 +14,7 @@
         }">(public link)</router-link>
     </div>
     <ec-Sheet class="character-sheet"
-      :characterId="character.id"
+      :character="character"
       :playerId="character['player_id']">
     </ec-Sheet>
   </div>
@@ -58,6 +58,11 @@ export default {
           return character.id === characterId
         })
       }
+    }
+  },
+  methods: {
+    getRaceIcon (character) {
+      return `/static/images/races/${character.race.replace(/[\s']/g, '').toLowerCase()}_${character.gender.toLowerCase()}.jpg`
     }
   }
 }

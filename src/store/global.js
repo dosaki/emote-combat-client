@@ -74,7 +74,11 @@ const actions = {
 
   createCharacter ({ commit }, params) {
     // console.log('Dispatching createCharacter')
-    CharacterService.create(params.playerId, {name: params.characterName})
+    CharacterService.create(params.playerId, {
+      name: params.characterName,
+      gender: params.characterGender,
+      race: params.characterRace
+    })
       .then(({ data }) => {
         const charData = data
         commit('addCharacter', charData)

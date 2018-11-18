@@ -5,7 +5,7 @@
         :to="{
           name: 'allCharacters'
         }">&lt;</router-link>
-      <span class="title">{{character.name}}</span>
+      <span class="title"><img class="race-portrait" :src="getRaceIcon(character)" /> {{character.name}}</span>
       <router-link
         v-if="currentPlayer === character['player_id']"
         :to="{
@@ -17,7 +17,7 @@
         }">(edit)</router-link>
     </div>
     <ec-pubSheet class="character-sheet"
-      :characterId="character.id">
+      :character="character">
     </ec-pubSheet>
   </div>
 </template>
@@ -68,6 +68,11 @@ export default {
       value => {
         self.$data.characterSheets = globalState.characterSheets
       })
+  },
+  methods: {
+    getRaceIcon (character) {
+      return `/static/images/races/${character.race.replace(/[\s']/g, '').toLowerCase()}_${character.gender.toLowerCase()}.jpg`
+    }
   }
 }
 </script>

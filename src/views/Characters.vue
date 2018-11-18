@@ -5,6 +5,7 @@
       <div class="character-list-item"
           v-for="(character, index) in filteredCharacters"
           v-bind:key="index+'-'+character.id">
+        <img class="race-portrait" :src="getRaceIcon(character)" />
         <router-link class="character-info character-link"
           :to="{
             name: 'publicCharacter',
@@ -61,6 +62,11 @@ export default {
       value => {
         data.allCharacters = store.state.global.allCharacters
       })
+  },
+  methods: {
+    getRaceIcon (character) {
+      return `/static/images/races/${character.race.replace(/[\s']/g, '').toLowerCase()}_${character.gender.toLowerCase()}.jpg`
+    }
   }
 }
 </script>
@@ -78,7 +84,10 @@ export default {
   display:inline-block;
 }
 .character-link {
-  min-width: 250px;
+  margin-bottom: 10px;
+}
+.race-portrait {
+  margin-bottom: -10px;
 }
 .new-character-input {
   min-width: 230px;

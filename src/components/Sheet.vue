@@ -23,7 +23,8 @@
           :subskillEntries="sheetEntries.filter(entry => skill.children.map(subskill => subskill.id).includes(entry['skill_id']))"
           :skill="skill"
           :interactable="true"
-          :characterRace="'Night Elf'"
+          :characterRace="character.race"
+          :gender="character.gender"
           v-on:add-main-skill="addMainSkill"
           v-on:subtract-main-skill="subtractMainSkill"
           v-on:add-main-subskill="addMainSubskill"
@@ -41,7 +42,7 @@ import ecSkill from '@/components/Skill'
 export default {
   name: 'ec-Sheet',
   props: {
-    characterId: { type: String, required: true },
+    character: { type: Object, required: true },
     playerId: { type: String, required: true }
   },
   data () {
@@ -55,7 +56,7 @@ export default {
     const store = this.$store
     const data = this.$data
     const globalState = store.state.global
-    const characterId = this.characterId
+    const characterId = (this.character || {}).id
 
     if (globalState.skills && Object.keys(globalState.skills).length > 0) {
       data.skills = globalState.skills
@@ -89,8 +90,8 @@ export default {
     },
     saveSheet () {
       this.$store.dispatch('saveModifiedSheetSkills', {
-        sheetEntries: this.$store.state.global.characterSheets[this.characterId],
-        characterId: this.characterId,
+        sheetEntries: this.$store.state.global.characterSheets[this.character.id],
+        characterId: this.character.id,
         playerId: this.playerId
       })
       this.$data.isDisabled = true
@@ -100,7 +101,7 @@ export default {
         this.$store.state.global.skills.main.find(skill => skill[property] === finder)
     },
     getStoreSheetEntry (property, finder) {
-      return this.$store.state.global.characterSheets[this.characterId].find(skill => skill[property] === finder)
+      return this.$store.state.global.characterSheets[this.character.id].find(skill => skill[property] === finder)
     },
     addMainSubskill (info) {
       const skillEntry = info.subskillEntries.find(e => e['skill_id'] === info.subskill.id)
@@ -123,12 +124,12 @@ export default {
       const experienceEntry = this.getStoreSheetEntry('skill_id', experience.id)
       if (experienceEntry.value - info.skill.cost >= 0 && (skillEntry.value + 1) <= info.max) {
         this.$store.dispatch('modifySheetSkill', {
-          characterId: this.characterId,
+          characterId: this.character.id,
           entryId: skillEntry.id,
           valueChange: 1
         })
         this.$store.dispatch('modifySheetSkill', {
-          characterId: this.characterId,
+          characterId: this.character.id,
           entryId: experienceEntry.id,
           valueChange: -info.skill.cost
         })
@@ -142,12 +143,12 @@ export default {
       const minValue = info.skill.name === 'Health' ? 0 : info.skill['starting_value']
       if (experienceEntry.value + info.skill.cost >= 0 && (skillEntry.value - 1) >= minValue) {
         this.$store.dispatch('modifySheetSkill', {
-          characterId: this.characterId,
+          characterId: this.character.id,
           entryId: skillEntry.id,
           valueChange: -1
         })
         this.$store.dispatch('modifySheetSkill', {
-          characterId: this.characterId,
+          characterId: this.character.id,
           entryId: experienceEntry.id,
           valueChange: info.skill.cost
         })
