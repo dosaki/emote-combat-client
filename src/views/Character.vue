@@ -6,12 +6,18 @@
           name: 'player',
           params: {playerId: character['player_id']}
         }">&lt;</router-link>
-      <span class="title"><img class="race-portrait" :src="getRaceIcon(character)" /> {{character.name}}</span>
+      <div class="character-name">
+        <span class="title">
+          <img class="race-portrait" :src="getRaceIcon(character)" />
+          {{character.name}}
+        </span>
+      </div>
       <router-link
         :to="{
           name: 'publicCharacter',
           params: {characterId: character.id}
         }">(public link)</router-link>
+      <div class="ingame-character-name">({{character["ingame_name"]}})</div>
     </div>
     <ec-Sheet class="character-sheet"
       :character="character"
@@ -87,5 +93,12 @@ export default {
 }
 .character-sheet {
   margin: 0 auto;
+}
+.character-name {
+  display: inline-block;
+}
+.ingame-character-name {
+  margin-left: 75px;
+  font-size: 0.9em;
 }
 </style>

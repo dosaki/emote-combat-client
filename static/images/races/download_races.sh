@@ -9,6 +9,7 @@ function download() {
   if [[ $? -eq 0 ]]; then
     mv ${IMG} ${RENAMED}
   else
+    cp ../question.jpg ${RENAMED}
     FAILED="$FAILED
 ${IMG}"
   fi
@@ -34,6 +35,8 @@ download race_orc_male.jpg orc_male.jpg
 download race_tauren_male.jpg tauren_male.jpg
 download race_troll_male.jpg troll_male.jpg
 download race_scourge_male.jpg forsaken_male.jpg
+download race_zandalaritroll_male.jpg zandalaritroll_male.jpg
+
 download race_darkirondwarf_female.jpg darkirondwarf_female.jpg
 download race_draenei_female.jpg draenei_female.jpg
 download race_dwarf_female.jpg dwarf_female.jpg
@@ -54,6 +57,7 @@ download race_orc_female.jpg orc_female.jpg
 download race_tauren_female.jpg tauren_female.jpg
 download race_troll_female.jpg troll_female.jpg
 download race_scourge_female.jpg forsaken_female.jpg
+download race_zandalaritroll_female.jpg zandalaritroll_female.jpg
 
 echo "Failed downloads:"
 echo "$FAILED"

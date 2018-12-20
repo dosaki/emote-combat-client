@@ -18,39 +18,55 @@
           }">
           {{character.name}}
         </router-link>
-        <span class="character-info character-delete"><button class="btn-borderless" v-on:click="deleteCharacter(character.id)">-</button></span>
+        <span class="character-info character-delete"><button class="btn" v-on:click="deleteCharacter(character.id)">-</button></span>
       </div>
       <div class="character-list-item ">
-        <select id="genderSelect">
-          <option value="">Gender</option>
-          <option value="Female">Female</option>
-          <option value="Male">Male</option>
-        </select>
-        <select id="raceSelect">
-          <option value="">Race</option>
-          <option value="Dark Iron Dwarf">Dark Iron Dwarf</option>
-          <option value="Draenei">Draenei</option>
-          <option value="Dwarf">Dwarf</option>
-          <option value="Gnome">Gnome</option>
-          <option value="Human">Human</option>
-          <option value="Kul Tiran">Kul Tiran</option>
-          <option value="Lightforged Draenei">Lightforged Draenei</option>
-          <option value="Night Elf">Night Elf</option>
-          <option value="Void Elf">Void Elf</option>
-          <option value="Worgen">Worgen</option>
-          <option value="Pandaren">Pandaren</option>
-          <option value="Blood Elf">Blood Elf</option>
-          <option value="Goblin">Goblin</option>
-          <option value="Highmountain Tauren">Highmountain Tauren</option>
-          <option value="Mag'har Orc">Mag'har Orc</option>
-          <option value="Nightborne">Nightborne</option>
-          <option value="Orc">Orc</option>
-          <option value="Tauren">Tauren</option>
-          <option value="Troll">Troll</option>
-          <option value="Forsaken">Forsaken</option>
-        </select>
-        <input class="new-character-input" id="newCharacter" type="text" placeholder="New Character Name"/>
-        <button v-on:click="newCharacter" class="btn create-character">+</button>
+        <div class="character-creation-form-item">
+          <span class="info">Server:</span>
+          <select id="serverLocationSelect" @change="onSelectLocation()" class="first">
+            <option v-for="(serverLocation, index) in Object.keys(servers)"
+                v-bind:key="`serverLocation${index}`"
+                :value="serverLocation">
+              {{serverLocation}}
+            </option>
+          </select>
+          <select id="serverSelect" class="second">
+            <option v-for="(server, index) in getServerList()"
+                v-bind:key="`server${index}`"
+                :value="server">
+              {{server}}
+            </option>
+          </select>
+        </div>
+        <div class="character-creation-form-item">
+          <span class="info">Race:</span>
+          <select id="raceSelect" class="first">
+            <option v-for="(race, index) in races"
+                v-bind:key="`race${index}`"
+                :value="race">
+              {{race}}
+            </option>
+          </select>
+          <select id="genderSelect" class="second">
+            <option value="">Gender</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+          </select>
+        </div>
+        <div class="character-creation-form-item">
+          <span class="info">Name: </span>
+          <input class="new-character-input" id="newCharacter" type="text" placeholder="New Character Name"/>
+          <i class="fas fa-question-circle" title="This should be the roleplay name of your character"></i>
+        </div>
+        <div class="character-creation-form-item">
+          <span class="info"></span>
+          <input class="new-ingame-character-input" id="newIngameCharacter" type="text" placeholder="Ingame Character Name"/>
+          <i class="fas fa-question-circle"
+            title="This should be the ingame name of your WoW character spelled exactly as it shows on your character list"></i>
+        </div>
+        <div class="character-creation-form-item">
+          <button v-on:click="newCharacter" class="btn create-character">Create Character</button>
+        </div>
       </div>
     </div>
   </div>
@@ -64,7 +80,102 @@ export default {
   data () {
     return {
       player: null,
-      characters: null
+      characters: null,
+      races: [
+        'Race',
+        'Dark Iron Dwarf',
+        'Draenei',
+        'Dwarf',
+        'Gnome',
+        'Human',
+        'Kul Tiran',
+        'Lightforged Draenei',
+        'Night Elf',
+        'Void Elf',
+        'Worgen',
+        'Pandaren',
+        'Blood Elf',
+        'Goblin',
+        'Highmountain Tauren',
+        'Mag\'har Orc',
+        'Nightborne',
+        'Orc',
+        'Tauren',
+        'Troll',
+        'Forsaken',
+        'Zandalari Troll'],
+      selectedLocation: 'Region',
+      servers: {
+        'Region': ['Roleplay Server'],
+        'US Pacific': [
+          'Blackwater Raiders',
+          'Cenarion Circle',
+          'Feathermoon',
+          'Sentinels',
+          'Silver Hand',
+          'The Scryers',
+          'Wyrmrest Accord',
+          'The Venture Co'],
+        'US Mountain': [
+          'Shadow Council'],
+        'US Central': [
+          'Farstriders',
+          'Kirin Tor',
+          'Moon Guard',
+          'Scarlet Crusade',
+          'Sisters of Elune',
+          'Thorium Brotherhood',
+          'Emerald Dream',
+          'Lightninghoof',
+          'Maelstrom',
+          'Twisting Nether'],
+        'US Eastern': [
+          'Argent Dawn',
+          'Earthen Ring',
+          'Steamwheedle Cartel',
+          'Ravenholdt'],
+        'Europe (English)': [
+          'Argent Dawn',
+          'Darkmoon Faire',
+          'Earthen Ring',
+          'Moonglade',
+          'Steamwheedle Cartel',
+          'The Sha\'tar',
+          'Defias Brotherhood',
+          'Ravenholdt',
+          'Scarshield Legion',
+          'Sporeggar',
+          'The Venture Co EU'],
+        'Europe (French)': [
+          'Confrérie du Thorium',
+          'Kirin Tor',
+          'Les Clairvoyants',
+          'Les Sentinelles',
+          'Conseil des Ombres',
+          'Culte de la Rive Noire',
+          'La Croisade écarlate'],
+        'Europe (German)': [
+          'Der Mithrilorden',
+          'Der Rat von Dalaran',
+          'Die Aldor',
+          'Die ewige Wacht',
+          'Die Nachtwache',
+          'Die Silberne Hand',
+          'Forscherliga',
+          'Todeswache',
+          'Zirkel des Cenarius',
+          'Das Konsortium',
+          'Das Syndikat',
+          'Der abyssische Rat',
+          'Die Arguswacht',
+          'Die Todeskrallen',
+          'Kult der Verdammten'],
+        'Europe (Spanish)': [
+          'Los Errantes',
+          'Shen\'dralar'],
+        'China (Battlegroup 10)': [
+          '金色平原 (The Golden Plains)']
+      }
     }
   },
   mounted () {
@@ -100,15 +211,25 @@ export default {
       })
   },
   methods: {
+    getServerList () {
+      return this.servers[this.selectedLocation]
+    },
+    onSelectLocation () {
+      this.selectedLocation = document.getElementById('serverLocationSelect').value
+    },
     newCharacter () {
       const characterName = document.getElementById('newCharacter').value
       const characterGender = document.getElementById('genderSelect').value
       const characterRace = document.getElementById('raceSelect').value
+      const characterIngameName = document.getElementById('newIngameCharacter').value
+      const characterServer = this.selectedLocation + document.getElementById('serverSelect').value
       document.getElementById('newCharacter').value = ''
       this.$store.dispatch('createCharacter', {
         characterName,
         characterGender,
         characterRace,
+        characterIngameName,
+        characterServer,
         playerId: this.player.id
       })
     },
@@ -150,9 +271,26 @@ export default {
 }
 .new-character-input {
   min-width: 230px;
-  margin-right: 6px;
+}
+.character-creation-form-item {
+  margin-top:2px;
+  margin-bottom:2px;
+}
+.character-creation-form-item .info {
+  display: inline-block;
+  width: 60px;
+}
+.character-creation-form-item select.first {
+  width:173px;
+}
+.character-creation-form-item select.second {
+  width:133px;
+}
+.character-creation-form-item input {
+  width:293px;
 }
 .create-character {
+  margin-top:5px;
   padding: 3px 6px;
 }
 </style>

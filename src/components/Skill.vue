@@ -2,9 +2,9 @@
   <div v-if="skill" :class="skill.name.toLowerCase()">
     <div v-if="['Experience', 'Health'].includes(skill.name)" class="skill metered-skill">
       <div class="meter" :title="skill.description">
-        <span class="bar" :style="`width: ${valuePercentage(skill.name, skillEntry.value)}%`">{{skill.name}} {{skillEntry.value}}</span>
+        <span class="bar" :style="`width: ${valuePercentage(skill.name, skillEntry.value-(subtract||0))}%`">{{skill.name}} {{skillEntry.value-(subtract||0)}}</span>
       </div>
-      <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('add-main-skill', {skill, skillEntry, max:5})">+</button></span>
+      <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('add-main-skill', {skill, skillEntry, max:10})">+</button></span>
       <span class="item button"><button class="btn-borderless" v-if="interactable" v-on:click="$emit('subtract-main-skill', {skill, skillEntry})">-</button></span>
     </div>
     <div v-else class="skill">
@@ -35,7 +35,8 @@ export default {
     skillEntry: {type: Object, required: false},
     subskillEntries: {type: Array, required: false},
     interactable: {type: Boolean, required: true},
-    characterRace: {type: String, required: false}
+    characterRace: {type: String, required: false},
+    subtract: {type:Number, required:false}
   },
   methods: {
     sortedSkills (skills) {
@@ -50,7 +51,7 @@ export default {
       })
     },
     valuePercentage (skillName, value) {
-      return Math.max(((skillName === 'Health' ? value / 5 : Math.min(94, value) / 94) * 100) - 4, 0)
+      return Math.max(((skillName === 'Health' ? value / 10 : Math.min(120, value) / 120) * 100) - 4, 0)
     },
     racializeSkill (race, skill) {
       if (Racialize[skill.name.toLowerCase()]) {

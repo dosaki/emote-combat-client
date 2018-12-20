@@ -73,11 +73,12 @@ const actions = {
   },
 
   createCharacter ({ commit }, params) {
-    // console.log('Dispatching createCharacter')
     CharacterService.create(params.playerId, {
-      name: params.characterName,
-      gender: params.characterGender,
-      race: params.characterRace
+      name: params.characterName || 'Anonymous',
+      'ingame_name': params.characterIngameName || 'Anonymous',
+      gender: (params.characterGender === 'Gender' ? 'Female' : params.characterGender) || 'Female',
+      race: (params.characterRace === 'Race' ? 'Night Elf' : params.characterRace) || 'Night Elf',
+      server: (params.characterServer === 'Realm' ? 'Argent Dawn (RP)' : params.characterServer) || 'Argent Dawn (RP)'
     })
       .then(({ data }) => {
         const charData = data
@@ -169,9 +170,10 @@ const mutations = {
   },
   modifySheetSkill (state, params) {
     state.characterSheets[params.characterId].find(s => s.id === params.entryId).value += params.valueChange
+    Vue.set(state.characterSheets, params.characterId, state.characterSheets[params.characterId])
   },
   saveModifiedSheetSkills (state, params) {
-    state.characterSheets[params.characterId] = params.sheetEntries
+    Vue.set(state.characterSheets, params.characterId, params.sheetEntries)
   }
 }
 

@@ -5,6 +5,7 @@
         <ec-Skill class="general-skill"
           :skillEntry="experience()"
           :skill="getStoreSkill('name', 'Experience')"
+          :subtract="calculateTotalCost()"
           :interactable="false">
         </ec-Skill>
         <ec-Skill class="general-skill"
@@ -88,6 +89,16 @@ export default {
       const skill = this.getStoreSkill('name', 'Health')
       return this.sheetEntries.find(entry => entry['skill_id'] === skill.id)
     },
+    calculateTotalCost() {
+      const totalCost = this.sheetEntries.map((entry) => {
+        const skill = this.getStoreSkill('id', entry['skill_id']) || this.getStoreSubskill('id', entry['skill_id'])
+        return entry["value"] * skill.cost
+      })
+      .reduce((val, total)=>{
+        return total+val
+      }, 0)
+      return totalCost
+    },
     saveSheet () {
       this.$store.dispatch('saveModifiedSheetSkills', {
         sheetEntries: this.$store.state.global.characterSheets[this.character.id],
@@ -99,6 +110,16 @@ export default {
     getStoreSkill (property, finder) {
       return this.$store.state.global.skills.general.find(skill => skill[property] === finder) ||
         this.$store.state.global.skills.main.find(skill => skill[property] === finder)
+    },
+    getStoreSubskill (property, finder) {
+      let returnable = null
+        this.$store.state.global.skills.main.forEach((skill) => {
+          const subskill = skill.children.find(skill => skill[property] === finder)
+          if(subskill){
+            returnable = subskill
+          }
+        })
+        return returnable
     },
     getStoreSheetEntry (property, finder) {
       return this.$store.state.global.characterSheets[this.character.id].find(skill => skill[property] === finder)
@@ -122,16 +143,12 @@ export default {
       const skillEntry = this.getStoreSheetEntry('id', info.skillEntry.id)
       const experience = this.getStoreSkill('name', 'Experience')
       const experienceEntry = this.getStoreSheetEntry('skill_id', experience.id)
-      if (experienceEntry.value - info.skill.cost >= 0 && (skillEntry.value + 1) <= info.max) {
+      const exp = experienceEntry.value - (this.calculateTotalCost()||0)
+      if (exp - info.skill.cost >= 0 && (skillEntry.value + 1) <= info.max) {
         this.$store.dispatch('modifySheetSkill', {
           characterId: this.character.id,
           entryId: skillEntry.id,
           valueChange: 1
-        })
-        this.$store.dispatch('modifySheetSkill', {
-          characterId: this.character.id,
-          entryId: experienceEntry.id,
-          valueChange: -info.skill.cost
         })
         this.$data.isDisabled = false
       }
@@ -141,16 +158,12 @@ export default {
       const experience = this.getStoreSkill('name', 'Experience')
       const experienceEntry = this.getStoreSheetEntry('skill_id', experience.id)
       const minValue = info.skill.name === 'Health' ? 0 : info.skill['starting_value']
-      if (experienceEntry.value + info.skill.cost >= 0 && (skillEntry.value - 1) >= minValue) {
+      const exp = experienceEntry.value - (this.calculateTotalCost()||0)
+      if (exp + info.skill.cost >= 0 && (skillEntry.value - 1) >= minValue) {
         this.$store.dispatch('modifySheetSkill', {
           characterId: this.character.id,
           entryId: skillEntry.id,
           valueChange: -1
-        })
-        this.$store.dispatch('modifySheetSkill', {
-          characterId: this.character.id,
-          entryId: experienceEntry.id,
-          valueChange: info.skill.cost
         })
         this.$data.isDisabled = false
       }

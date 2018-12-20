@@ -5,7 +5,12 @@
         :to="{
           name: 'allCharacters'
         }">&lt;</router-link>
-      <span class="title"><img class="race-portrait" :src="getRaceIcon(character)" /> {{character.name}}</span>
+      <div class="character-name">
+        <span class="title">
+          <img class="race-portrait" :src="getRaceIcon(character)" />
+          {{character.name}}
+        </span>
+      </div>
       <router-link
         v-if="currentPlayer === character['player_id']"
         :to="{
@@ -15,6 +20,7 @@
             characterId: character.id
           }
         }">(edit)</router-link>
+      <div class="ingame-character-name">({{character["ingame_name"]}})</div>
     </div>
     <ec-pubSheet class="character-sheet"
       :character="character">
@@ -96,5 +102,12 @@ export default {
 }
 .character-sheet {
   margin: 0 auto;
+}
+.character-name {
+  display: inline-block;
+}
+.ingame-character-name {
+  margin-left: 75px;
+  font-size: 0.9em;
 }
 </style>

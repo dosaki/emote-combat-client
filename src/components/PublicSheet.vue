@@ -3,10 +3,14 @@
     <div v-if="sheetEntries && skills" class="sheet">
       <div class="general-skills">
         <ec-Skill class="general-skill"
-          v-for="(skill, index) in skills.general"
-          :key="'general'+index"
-          :skillEntry="sheetEntries.find(entry => entry['skill_id'] === skill.id)"
-          :skill="skill"
+          :skillEntry="experience()"
+          :skill="getStoreSkill('name', 'Experience')"
+          :subtract="calculateTotalCost()"
+          :interactable="false">
+        </ec-Skill>
+        <ec-Skill class="general-skill"
+          :skillEntry="health()"
+          :skill="getStoreSkill('name', 'Health')"
           :interactable="false">
         </ec-Skill>
       </div>
@@ -67,6 +71,40 @@ export default {
   },
   components: {
     ecSkill
+  },
+  methods: {
+    experience () {
+      const skill = this.getStoreSkill('name', 'Experience')
+      return this.sheetEntries.find(entry => entry['skill_id'] === skill.id)
+    },
+    health () {
+      const skill = this.getStoreSkill('name', 'Health')
+      return this.sheetEntries.find(entry => entry['skill_id'] === skill.id)
+    },
+    getStoreSkill (property, finder) {
+      return this.$store.state.global.skills.general.find(skill => skill[property] === finder) ||
+        this.$store.state.global.skills.main.find(skill => skill[property] === finder)
+    },
+    getStoreSubskill (property, finder) {
+      let returnable = null
+        this.$store.state.global.skills.main.forEach((skill) => {
+          const subskill = skill.children.find(skill => skill[property] === finder)
+          if(subskill){
+            returnable = subskill
+          }
+        })
+        return returnable
+    },
+    calculateTotalCost() {
+      const totalCost = this.sheetEntries.map((entry) => {
+        const skill = this.getStoreSkill('id', entry['skill_id']) || this.getStoreSubskill('id', entry['skill_id'])
+        return entry["value"] * skill.cost
+      })
+      .reduce((val, total)=>{
+        return total+val
+      }, 0)
+      return totalCost
+    }
   }
 }
 </script>
